@@ -14,7 +14,7 @@ from utils.helper import * # local imports
 
 
 def demoPlot(month):
-    path = "/Users/michaellu/ws/water-scarcity-hackathon/heatmap_data/wsi_1981-1990_0" + str(month) + ".tif"
+    path = "heatmap_data/wsi_1981-1990_0" + str(month) + ".tif"
     demo = np.array(rs.open(path).read(1))
     for i in range(demo.shape[0]):
         for j in range(demo.shape[1]):
@@ -29,7 +29,7 @@ def preprocess_data():
     zeros2 = np.zeros((280, 720, 12))
 
     # Importing 1980-1990 heatmap data
-    string = "/Users/michaellu/ws/water-scarcity-hackathon/heatmap_data/wsi_1981-1990_0"
+    string = "heatmap_data/wsi_1981-1990_0"
     for z in range(9):
         test = string + str(z + 1) + ".tif"
         temp = rs.open(test)
@@ -37,14 +37,14 @@ def preprocess_data():
         arr = np.array(band1)
         zeros[:, :, z] = arr
 
-    zeros[:, :, 9] = np.array(rs.open("/Users/michaellu/ws/water-scarcity-hackathon/heatmap_data/wsi_1981-1990_10.tif").read(1))
-    zeros[:, :, 10] = np.array(rs.open("/Users/michaellu/ws/water-scarcity-hackathon/heatmap_data/wsi_1981-1990_11.tif").read(1))
-    zeros[:, :, 11] = np.array(rs.open("/Users/michaellu/ws/water-scarcity-hackathon/heatmap_data/wsi_1981-1990_12.tif").read(1))
+    zeros[:, :, 9] = np.array(rs.open("heatmap_data/wsi_1981-1990_10.tif").read(1))
+    zeros[:, :, 10] = np.array(rs.open("heatmap_data/wsi_1981-1990_11.tif").read(1))
+    zeros[:, :, 11] = np.array(rs.open("heatmap_data/wsi_1981-1990_12.tif").read(1))
 
     zeros = np.where(zeros == np.min(zeros), 0, zeros)
 
     # Importing 2001-2010 heatmap data
-    string = "/Users/michaellu/ws/water-scarcity-hackathon/heatmap_data/wsi_2001-2010_0"
+    string = "heatmap_data/wsi_2001-2010_0"
     for z in range(9):
         test = string + str(z + 1) + ".tif"
         temp = rs.open(test)
@@ -52,9 +52,9 @@ def preprocess_data():
         arr = np.array(band1)
         zeros2[:, :, z] = arr
 
-    zeros2[:, :, 9] = np.array(rs.open("/Users/michaellu/ws/water-scarcity-hackathon/heatmap_data/wsi_2001-2010_10.tif").read(1))
-    zeros2[:, :, 10] = np.array(rs.open("/Users/michaellu/ws/water-scarcity-hackathon/heatmap_data/wsi_2001-2010_11.tif").read(1))
-    zeros2[:, :, 11] = np.array(rs.open("/Users/michaellu/ws/water-scarcity-hackathon/heatmap_data/wsi_2001-2010_12.tif").read(1))
+    zeros2[:, :, 9] = np.array(rs.open("heatmap_data/wsi_2001-2010_10.tif").read(1))
+    zeros2[:, :, 10] = np.array(rs.open("heatmap_data/wsi_2001-2010_11.tif").read(1))
+    zeros2[:, :, 11] = np.array(rs.open("heatmap_data/wsi_2001-2010_12.tif").read(1))
 
     zeros2 = np.where(zeros2 == np.min(zeros2), 0, zeros2)
 
@@ -90,6 +90,12 @@ def preprocess_data():
     return training_x, training_y, testing_x, testing_y
 
 def train_model(input_data, output_data):
+    """
+    This function trains a CNN to predict heatmaps of future water scarcity
+    Inputs: 
+        input_data (N, 280, 720, 3)
+        output_data (N, 280, 720)
+    """
     model = tf.keras.Sequential()
     model.add(Convolution2D(32,
                             3,
@@ -125,10 +131,6 @@ def test_model(model, testing_x, testing_y):
     return model.evaluate(testing_x, testing_y)
 
 if __name__ == '__main__':
-    # parser = argparse.ArgumentParser(description='Process some integers.')
-    # parser.add_argument('-a', type=int, help='an integer for the accumulator')
-    # parser.add_argument('-b', type=int, help='an integer for the accumulator')
-    # args = parser.parse_args()
-    # demoPlot(9)
+
     training_x, training_y, testing_x, testing_y = preprocess_data()
     model = train_model(training_x, training_y)
