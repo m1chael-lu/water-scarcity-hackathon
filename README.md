@@ -1,3 +1,5 @@
 # water-scarcity-hackathon
 
-This is Michael's first commit on water scarcity hackathon project. 
+This project uses a python-developed, u-net convolutional neural network to learn and predict future heatmaps of global water scarcity.
+
+After training, the model can make future projections that look liek the following: 
